@@ -42,29 +42,33 @@ source_group("SIMD Files" FILES ${SIMD_SOURCE})
 source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
-add_library(glm INTERFACE)
-target_include_directories(glm INTERFACE ../)
+add_library(${GLM_INTERFACE_NAME} INTERFACE)
+target_include_directories(${GLM_INTERFACE_NAME} INTERFACE ../)
 
 if(BUILD_STATIC_LIBS)
-add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
+add_library(${GLM_LIBRARY_NAME} STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
 	${ROOT_SOURCE}    ${ROOT_INLINE}    ${ROOT_HEADER}
 	${CORE_SOURCE}    ${CORE_INLINE}    ${CORE_HEADER}
 	${EXT_SOURCE}     ${EXT_INLINE}     ${EXT_HEADER}
 	${GTC_SOURCE}     ${GTC_INLINE}     ${GTC_HEADER}
 	${GTX_SOURCE}     ${GTX_INLINE}     ${GTX_HEADER}
 	${SIMD_SOURCE}    ${SIMD_INLINE}    ${SIMD_HEADER})
-	target_link_libraries(glm_static PUBLIC glm)
-	add_library(glm::glm_static ALIAS glm_static)
+	target_link_libraries(${GLM_LIBRARY_NAME} PUBLIC ${GLM_INTERFACE_NAME})
+	add_library(glm::glm_static ALIAS ${GLM_LIBRARY_NAME})
+	set_target_properties(${GLM_LIBRARY_NAME} PROPERTIES   VS_DEBUGGER_WORKING_DIRECTORY    "${OUTPUT_BINDIR}"              # Working directory
+                                                           FOLDER                           "0. External Libraries")        # Project filter location
 endif()
 
 if(BUILD_SHARED_LIBS)
-add_library(glm_shared SHARED ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
+add_library(${GLM_LIBRARY_NAME} SHARED ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
 	${ROOT_SOURCE}    ${ROOT_INLINE}    ${ROOT_HEADER}
 	${CORE_SOURCE}    ${CORE_INLINE}    ${CORE_HEADER}
 	${EXT_SOURCE}     ${EXT_INLINE}     ${EXT_HEADER}
 	${GTC_SOURCE}     ${GTC_INLINE}     ${GTC_HEADER}
 	${GTX_SOURCE}     ${GTX_INLINE}     ${GTX_HEADER}
 	${SIMD_SOURCE}    ${SIMD_INLINE}    ${SIMD_HEADER})
-	target_link_libraries(glm_shared PUBLIC glm)
-	add_library(glm::glm_shared ALIAS glm_shared)
+	target_link_libraries(${GLM_LIBRARY_NAME} PUBLIC ${GLM_INTERFACE_NAME})
+	add_library(glm::glm_shared ALIAS ${GLM_LIBRARY_NAME})
+	set_target_properties(${GLM_LIBRARY_NAME} PROPERTIES    VS_DEBUGGER_WORKING_DIRECTORY    "${OUTPUT_BINDIR}"              # Working directory
+															FOLDER                           "0. External Libraries")        # Project filter location
 endif()
